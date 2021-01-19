@@ -25,7 +25,7 @@ CREATE TABLE Cliente
   PRIMARY KEY (idCliente)
 );
 
-CREATE TABLE Admin
+CREATE TABLE Admon
 (
   idAdmin INT NOT NULL,
   nombre varchar(30) NOT NULL,
@@ -52,7 +52,7 @@ CREATE TABLE Crea
   idAdmin INT NOT NULL,
   PRIMARY KEY (idExamen, idAdmin),
   FOREIGN KEY (idExamen) REFERENCES Examen(idExamen),
-  FOREIGN KEY (idAdmin) REFERENCES Admin(idAdmin)
+  FOREIGN KEY (idAdmin) REFERENCES Admon(idAdmin)
 );
 
 CREATE TABLE Reactivo
@@ -66,7 +66,7 @@ CREATE TABLE Reactivo
   Respuesta varchar(600) NOT NULL,
   idAdmin INT NOT NULL,
   PRIMARY KEY (idPregunta),
-  FOREIGN KEY (idAdmin) REFERENCES Admin(idAdmin)
+  FOREIGN KEY (idAdmin) REFERENCES Admon(idAdmin)
 );
 
 CREATE TABLE Tiene
