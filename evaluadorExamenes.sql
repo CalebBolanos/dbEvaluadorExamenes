@@ -79,12 +79,49 @@ CREATE TABLE Tiene
 );
 
 /*================== Insert ===========================*/
-
+insert into Admon values(1,'Edgar','Garcia','Marciano','edgargarcia@gmail.com','qwer1');
+insert into Admon values(2,'Jose Eduardo','Olay','Silis','laloolay@gmail.com','awsd2');
 insert into Admon values(3,"Caleb Salomon","Bolaños","Ramos",
 "bolanos.c@hotmail.com","CalSa");
 insert into Admon values(4,"Axel","Hernandez","Oble",
 "axel.2001@yahoo.com.mx","AxHO");
 
+
+
+
+insert into Reactivo values(1,'En la Cadena Alimenticia, a cada eslabón se le conoce con el nombre de:','Descomposición','Fuente potencial de alimento','Flujo de energía','Nivel trófico','Nivel trófico',1);
+insert into Reactivo values(2,'En los seres humanos, la unión de un gameto femenino (óvulo) con un gameto masculino (espermatozoide) da como resultado un cigoto con _____ cromosomas:','46','18','14','36','46',2);
+insert into Reactivo values(3,'A los organismos que captan el nitrógeno atmosférico, lo transfoman en nitritos y nitratos y los depositan en el suelo se les llama:','Bacterias nitrificantes','Bacterias desnitrificantes','Saprófitos','Descomponedores','Bacterias nitrificantes',1);
+insert into Reactivo values(4,'Todos los nombres científicos se utilizan en este idioma; el hecho de que no sea una lengua viva tiene una ventaja extra: ya no sufre variaciones:','Latín','Inglés','Ruso','Francés','Latín',1);
+insert into Reactivo values(5,'En el órgno reproductor masculino del ser humano, los espermatozoides y la testosterona se producen dentro de:','Próstata','Testículos','Pene','Escroto','Testículos',1);
+insert into Reactivo values(6,'Al paso de una solución de mayor concentración a menor concentración, al través de una membrana permeable o semi-permeable se le conoce como:','Permeabilidad','Impermeabilidad','Purificación','Osmosis','Osmosis',1);
+insert into Reactivo values(7,'Si alteramos por contaminación un ecosistema se dice que rompemos el:','Sistema','Equilibrio ecológico','Hábitat','Grupo','Equilibrio ecológico',1);
+insert into Reactivo values(8,'El Sistema jerárquico está formado por ____ Niveles taxonómicos.','3','7','10','5','7',1);
+insert into Reactivo values(9,'A los organismos que producen su propio alimento se les llama:','Descomponedores','Carnívoros','Productores','Depredadores','Productores',1);
+insert into Reactivo values(10,'La masa continental conocida como Pangea pertenece a la Era:','Jurásico','Cenozoica','Paleozica','Azoica','Azoica',1);
+insert into Reactivo values(11,'El factor causante del deterioro de los materiales de construcción que permanencen a la intemperie es:','Cambio climático global','Deterioro de la capa de ozono','Contaminación de agua','Lluvia ácida','Lluvia ácida',1);
+insert into Reactivo values(12,'Las algas se clasifican por sus pigmentos. Relaciona cada alga con su color:
+1.-Clorofíceas
+2.-Rodofíceas
+3.-Diatomeas
+4.-Feofíceas
+I Algas color amarillo
+II Algas color verde
+III Algas color café
+IV Algas color rojo','1,III / 2 ,I / 3,IV / 4,II','1,III / 2,I / 3,II / 4,IV','1,II / 2,III / 3,I / 4 ,IV','1,II / 2,IV / 3,I / 4,III','1,II / 2,IV / 3,I / 4,III',1);
+insert into Reactivo values(13,'En _______ los congresistas establecen en México el sistema Republicano Federal:','1824','1812','1917','1821','1824',1);
+insert into Reactivo values(14,'Dentro de una sociedad, cuando las personas no cuentan con un trabajo que les permita satisfacer sus necesidades, nos referimos a:','Vagancia','Jornada laboral','Desempleo','Sub-empleo','Desempleo',1);
+insert into Reactivo values(15,'Al conjunto de reglas que se deben seguir de forma obligatoria para mantener el orden se le llama:','Justicia','Normas','Obligaciones','Leyes','Leyes',1);
+insert into Reactivo values(16,'Todas son funciones de la leyes dentro de nuestra democracia, excepto:','Limitar el poder del Gobierno','Proteger nuestro Derecho','Procurar la salud del pueblo','Delimitar la Libertad de cada persona','Procurar la salud del pueblo',1);
+insert into Reactivo values(17,'En el Artículo 123 de la Constitución Mexicana se establece que la jornada laboral máxima para niños menores de 16 años es de:','8 horas diarias','8 horas los fines de semana','6 horas diarias','4 horas diarias','6 horas diarias',1);
+insert into Reactivo values(18,'El organismo encargado del proceso electoral en nuestro país es:','Instituto Nacional de Geografía, Estadística e Informática','Comisión Nacional de los Derechos Humanos','Instituto Federal Electoral','Secretaría de Gobernación','Instituto Federal Electoral',1);
+insert into Reactivo values(19,'Nombre que se le da al grupo de actitudes que contradicen los ideales de igualdad racial, social y de género.','Xenofobia','Injusticia','Discriminación','Intransigencia','Discriminación',1);
+insert into Reactivo values(20,'Nombre oficial de nuestro país:','Nueva España','Tenochtitlán','México','Estados Unidos Mexicanos','Estados Unidos Mexicanos',1);
+insert into Reactivo values(21,'Esta dependencia gubernamental se encarga de regular los lineamientos de la enseñanza a nivel nacional.','Secretaría de Educación Pública','Secretaría de la Defensa Nacional','Secretaría de Hacienda y Crédito Público','Procuraduría General de la República','Secretaría de Educación Pública',1);
+insert into Reactivo values(22,'Actividades económicas en las zonas urbanas:','Industria y turismo','Agricultura y ganadería','Comercio y ganadería','Industria y pesca','Industria y turismo',1);
+insert into Reactivo values(23,'A las áreas del territorio en donde se requiere preservar y restaurar el equilibrio ecológico se les conoce con el nombre de:','Areas naturales protegidas','Areas de Seguridad','Rutas de evacuación','Zonas de desastre','Areas naturales protegidas',1);
+insert into Reactivo values(24,'Un Ministro de la Suprema Corte de Justicia se mantiene en funciones por un periodo de _________ años.','15','10','12','6','15',1);
+insert into Reactivo values(25,'Tiempo verbal del modo indicativo que se utiliza para expresar acciones que no se han realizado, pero que son posibles.','Pretérito','Presente','Futuro','Pospretérito','Futuro',1);
 
 insert into Reactivo values(26,"Generalmente se efectúa entre dos personas y 
 permite obtener datos específicos sobre un tema:", "Discusion","Polemica",
