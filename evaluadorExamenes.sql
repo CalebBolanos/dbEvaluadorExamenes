@@ -31,7 +31,7 @@ CREATE TABLE Admon
   nombre varchar(30) NOT NULL,
   paterno varchar(30) NOT NULL,
   materno varchar(30) NOT NULL,
-  correo varchar(20) NOT NULL,
+  correo varchar(30) NOT NULL,
   contraseña varchar(10) NOT NULL,
   PRIMARY KEY (idAdmin)
 );
