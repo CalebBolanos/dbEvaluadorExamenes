@@ -229,14 +229,14 @@ drop procedure if exists spRegistrarCliente;
 delimiter |
 create procedure spRegistrarCliente(in nom varchar(50), in pat varchar(50), in mat varchar(50), in corr varchar(50), contra nvarchar(50),identificador varchar(1))-- si identificador = *c* es cliente, si identificador = *a* admin
 begin
-	declare existec,existea, idCli int;-- existec para cliente, existea para admin, idcli funciona como una variable
+	declare existec,existea, idCli, idAdm int;-- existec para cliente, existea para admin, idcli funciona como una variable
     declare msj nvarchar(200);
     if(identificador="a")then 
     -- set msj="Admin";
     set existea = (select count(*) from Admon where correo = corr);
     if(existea = 0) then
-		set idCli = (select ifnull(max(idAdmin),0)+1 from Admon);
-        insert into Admon values(idAdmin, nom, pat, mat, corr, contra);
+		set idAdm  = (select ifnull(max(idAdmin),0)+1 from Admon);
+        insert into Admon values(idAdm , nom, pat, mat, corr, contra);
         set msj = "Se agrego nuevo Admin";
     else
 		set msj = "Ya existe un Admin asociado con el correo electrónico, proporciona uno distinto";
@@ -254,7 +254,7 @@ begin
     select msj, idCli;
 end; |
 delimiter ;
-call spRegistrarCliente("carl", "jhonson", "jr", "carljr@hotmail.com", "1234","c");
-call spRegistrarCliente("carl", "jhonson", "jr", "carljr@hotmail.com", "1234","a");
+call spRegistrarCliente("carl", "jhonson", "jr", "carl@hotmail.com", "1234","c");
+call spRegistrarCliente("carl", "jhonson", "jr", "carl@hotmail.com", "1234","a");
 select * from Cliente;
 select * from Admon;
