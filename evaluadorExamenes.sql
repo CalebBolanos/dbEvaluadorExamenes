@@ -20,8 +20,8 @@ CREATE TABLE Cliente
   nombre varchar(30) NOT NULL,
   paterno varchar(30) NOT NULL,
   materno varchar(30) NOT NULL,
-  correo varchar(20) NOT NULL,
-  contraseña varchar(10) NOT NULL,
+  correo varchar(30) NOT NULL,
+  contrasena varchar(10) NOT NULL,
   PRIMARY KEY (idCliente)
 );
 
@@ -32,7 +32,7 @@ CREATE TABLE Admon
   paterno varchar(30) NOT NULL,
   materno varchar(30) NOT NULL,
   correo varchar(30) NOT NULL,
-  contraseña varchar(10) NOT NULL,
+  contrasena varchar(10) NOT NULL,
   PRIMARY KEY (idAdmin)
 );
 
@@ -224,3 +224,37 @@ hidrógeno:", "Marte", "Tierra", "Sol","Luna", "Sol","4");
 insert into Reactivo values(50,"En el Hemisferio Norte el 21 de marzo inicia 
 la primavera y en el Hemisferio Sur inicia:", "Primavera", "Invierno", 
 "Otoño","Verano", "Otoño","4");
+
+drop procedure if exists spRegistrarCliente;
+delimiter |
+create procedure spRegistrarCliente(in nom varchar(50), in pat varchar(50), in mat varchar(50), in corr varchar(50), contra nvarchar(50),identificador varchar(1))-- si identificador = *c* es cliente, si identificador = *a* admin
+begin
+	declare existec,existea, idCli int;-- existec para cliente, existea para admin, idcli funciona como una variable
+    declare msj nvarchar(200);
+    if(identificador="a")then 
+    -- set msj="Admin";
+    set existea = (select count(*) from Admon where correo = corr);
+    if(existea = 0) then
+		set idCli = (select ifnull(max(idAdmin),0)+1 from Admon);
+        insert into Admon values(idAdmin, nom, pat, mat, corr, contra);
+        set msj = "Se agrego nuevo Admin";
+    else
+		set msj = "Ya existe un Admin asociado con el correo electrónico, proporciona uno distinto";
+	end if;
+    else
+    set existec = (select count(*) from Cliente where correo = corr);
+    if(existec = 0) then
+		set idCli = (select ifnull(max(idCliente),0)+1 from Cliente);
+        insert into cliente values(idCli, nom, pat, mat, corr, contra);
+        set msj = "Se agrego nuevo usuario";
+    else
+		set msj = "Ya existe un usuario asociado con el correo electrónico, proporciona uno distinto";
+	end if;
+    end if;
+    select msj, idCli;
+end; |
+delimiter ;
+call spRegistrarCliente("carl", "jhonson", "jr", "carljr@hotmail.com", "1234","c");
+call spRegistrarCliente("carl", "jhonson", "jr", "carljr@hotmail.com", "1234","a");
+select * from Cliente;
+select * from Admon;
