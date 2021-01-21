@@ -317,3 +317,24 @@ r.OpC as "Opcion C", r.OpD as "Opcion D", r.Respuesta as "Respuesta correcta",
 e.Fecha as "Fecha de creacion" FROM Examen e, Tiene t, Reactivo r where 
 r.idPregunta = t.idPregunta and t.idExamen = e.idExamen order by 1;
 
+drop procedure if exists RespCorre;
+delimiter |
+create procedure RespCorre(in idClie int, in NumPregu int)
+begin
+	declare existe, compro int;
+    declare msj varchar(200);
+    
+    set existe = (select count(*) from Responde where idPregunta = NumPregu and idCliente = idClie);
+    if(existe = 1) then
+		set compro = (select count(*) from Reactivo r, responde re where r.Respuesta = re.OpCliente);
+        if(compro = 1) then
+			set msj="Respuesta correcta";
+        else
+			set msj="Respuesta incorrecta";
+		end if;
+    else
+		set msj="El usuario no ha respondido esta pregunta";
+    end if;
+    select msj;
+end; |
+delimiter ;
