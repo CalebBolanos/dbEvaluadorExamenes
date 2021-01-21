@@ -245,20 +245,21 @@ begin
     declare msj3 nvarchar(200);
     declare msj4 nvarchar(200);
     if(identificador="a")then 
-    
-    set existea = (select count(*) from Admon where correo = corr);
-    if(existea = 0) then
-		set idAdm  = (select ifnull(max(idAdmin),0)+1 from Admon);
-        insert into Admon values(idAdm , nom, pat, mat, corr, contra);
-        set msj1 = "Se agrego nuevo Admin";
-        select msj1, idAdm;
+		set existea = (select count(*) from Admon where correo = corr);
+        set existec = (select count(*) from Cliente where correo = corr);
+		if(existea = 0 and existec = 0) then
+			set idAdm  = (select ifnull(max(idAdmin),0)+1 from Admon);
+			insert into Admon values(idAdm , nom, pat, mat, corr, contra);
+			set msj1 = "Se agrego nuevo Admin";
+			select msj1, idAdm;
     else
-		set msj2 = "Ya existe un Admin asociado con el correo electrónico, proporciona uno distinto";
+		set msj2 = "Ya existe un usuario asociado con el correo electrónico, proporciona uno distinto";
         select msj2;
 	end if;
     else-- else de a
-    set existec = (select count(*) from Cliente where correo = corr);
-    if(existec = 0) then
+    set existea = (select count(*) from Admon where correo = corr);
+	set existec = (select count(*) from Cliente where correo = corr);
+    if(existea = 0 and existec = 0) then
 		set idCli = (select ifnull(max(idCliente),0)+1 from Cliente);
         insert into cliente values(idCli, nom, pat, mat, corr, contra);
         set msj3 = "Se agrego nuevo usuario";
@@ -280,35 +281,39 @@ drop procedure if exists spIniciarSesion;
 delimiter |
 create procedure spIniciarSesion(in usr varchar(50), contra nvarchar(50))
 begin
-	declare existe, idCli int;
-    declare existea, idAdm int;
+	declare existe, id, tipo int;
+    declare existea int;
     declare nom, pat, mat, corr nvarchar(50);
     declare nom1, pat1, mat1, corr1 nvarchar(50);
     declare msj nvarchar(200);
-    declare msj1 nvarchar(200);
-    declare msj2 nvarchar(200);
     
     set existe = (select count(*) from Cliente where correo = usr and contrasena = contra);
     if(existe = 1) then
-		select idCliente, nombre, paterno, materno, correo into idCli, nom, pat, mat, corr from Cliente where correo = usr;
+		select idCliente, nombre, paterno, materno, correo into id, nom, pat, mat, corr from Cliente where correo = usr;
         set msj = "ok";
-        select msj, idCli, nom, pat, mat, corr;
-    end if;
-    set existea = (select count(*) from Admon where correo = usr and contrasena = contra);
-    if(existea = 1) then
-		select idAdmin, nombre, paterno, materno, correo into idAdm, nom1, pat1, mat1, corr1 from Admon where correo = usr;
-        set msj1 = "ok";
-        select msj1, idAdm, nom1, pat1, mat1, corr1;
+        set tipo = 1; #para identificar que el tipo de ususario es cliente
+        select msj, tipo, id, nom, pat, mat, corr;
+    else
+		set existea = (select count(*) from Admon where correo = usr and contrasena = contra);
+		if(existea = 1) then
+			select idAdmin, nombre, paterno, materno, correo into id, nom1, pat1, mat1, corr1 from Admon where correo = usr;
+			set msj = "ok";
+            set tipo = 2; #admin
+			select msj, tipo, id, nom1, pat1, mat1, corr1;
+		end if;
     end if;
     if(existea+existe=0)then
-     set msj2="Correo o contraseña incorrecto";
-      select msj2;
+     set msj="Correo o contraseña incorrecto";
+      select msj;
       end if;
 end; |
 delimiter ;
 call spIniciarSesion("carl@hotmail.com", "1234");
 call spIniciarSesion("a", "aasa");
 call spIniciarSesion("edgargarcia@gmail.com", "qwer1");
+
+select * from Cliente;
+select * from Admon;
 
 create view MostraExa as select e.idExamen as "Id Examen", 
 t.TipoExamen as "Tipo de examen", r.idPregunta as "Id Pregunta",
