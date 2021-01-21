@@ -8,7 +8,6 @@ CREATE TABLE Examen
 (
   idExamen INT NOT NULL,
   Fecha date NOT NULL,
-  LastPre INT ,
   Tiempo time NOT NULL,
   PRIMARY KEY (idExamen)
 );
@@ -19,8 +18,8 @@ CREATE TABLE Cliente
   nombre varchar(30) NOT NULL,
   paterno varchar(30) NOT NULL,
   materno varchar(30) NOT NULL,
-  correo varchar(30) NOT NULL,
-  contrasena varchar(10) NOT NULL,
+  correo varchar(20) NOT NULL,
+  contraseña varchar(10) NOT NULL,
   PRIMARY KEY (idCliente)
 );
 
@@ -31,18 +30,8 @@ CREATE TABLE Admon
   paterno varchar(30) NOT NULL,
   materno varchar(30) NOT NULL,
   correo varchar(30) NOT NULL,
-  contrasena varchar(10) NOT NULL,
+  contraseña varchar(10) NOT NULL,
   PRIMARY KEY (idAdmin)
-);
-
-CREATE TABLE Responde
-(
-  Calificacion float NOT NULL,
-  idExamen INT NOT NULL,
-  idCliente INT NOT NULL,
-  PRIMARY KEY (idExamen, idCliente),
-  FOREIGN KEY (idExamen) REFERENCES Examen(idExamen),
-  FOREIGN KEY (idCliente) REFERENCES Cliente(idCliente)
 );
 
 CREATE TABLE Crea
@@ -54,6 +43,16 @@ CREATE TABLE Crea
   FOREIGN KEY (idAdmin) REFERENCES Admon(idAdmin)
 );
 
+CREATE TABLE Completa
+(
+  Calificacion float NOT NULL,
+  idCliente INT NOT NULL,
+  idExamen INT NOT NULL,
+  PRIMARY KEY (idCliente, idExamen),
+  FOREIGN KEY (idCliente) REFERENCES Cliente(idCliente),
+  FOREIGN KEY (idExamen) REFERENCES Examen(idExamen)
+);
+
 CREATE TABLE Reactivo
 (
   idPregunta INT NOT NULL,
@@ -61,7 +60,7 @@ CREATE TABLE Reactivo
   OpA varchar(600) NOT NULL,
   OpB varchar(600) NOT NULL,
   OpC varchar(600) NOT NULL,
-   OpD varchar(600) NOT NULL,
+  OpD varchar(600) NOT NULL,
   Respuesta varchar(600) NOT NULL,
   idAdmin INT NOT NULL,
   PRIMARY KEY (idPregunta),
@@ -72,10 +71,20 @@ CREATE TABLE Tiene
 (
   idExamen INT NOT NULL,
   idPregunta INT NOT NULL,
-  TipoExamen varchar(10) NOT NULL,
+  TipoExamen nvarchar(10) NOT NULL,
   PRIMARY KEY (idExamen, idPregunta),
   FOREIGN KEY (idExamen) REFERENCES Examen(idExamen),
   FOREIGN KEY (idPregunta) REFERENCES Reactivo(idPregunta)
+);
+
+CREATE TABLE Responde
+(
+  OpCliente varchar(500) not null,
+  idPregunta INT NOT NULL,
+  idCliente INT NOT NULL,
+  PRIMARY KEY (idPregunta, idCliente),
+  FOREIGN KEY (idPregunta) REFERENCES Reactivo(idPregunta),
+  FOREIGN KEY (idCliente) REFERENCES Cliente(idCliente)
 );
 
 /*================== Insert ===========================*/
@@ -258,3 +267,11 @@ call spRegistrarCliente("carl", "jhonson", "jr", "carl@hotmail.com", "1234","c")
 call spRegistrarCliente("carl", "jhonson", "jr", "carl@hotmail.com", "1234","a");
 select * from Cliente;
 select * from Admon;
+
+create view MostraExa as select e.idExamen as "Id Examen", 
+t.TipoExamen as "Tipo de examen", r.idPregunta as "Id Pregunta",
+r.pregunta as "Pregunta", r.OpA as "Opcion A", r.OpB as "Opcion B", 
+r.OpC as "Opcion C", r.OpD as "Opcion D", r.Respuesta as "Respuesta correcta", 
+e.Fecha as "Fecha de creacion" FROM Examen e, Tiene t, Reactivo r where 
+r.idPregunta = t.idPregunta and t.idExamen = e.idExamen order by 1;
+
