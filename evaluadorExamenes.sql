@@ -7,7 +7,6 @@ use examenes;
 CREATE TABLE Examen
 (
   idExamen INT NOT NULL,
-  TipoExamen varchar(10) NOT NULL,
   Fecha date NOT NULL,
   LastPre INT ,
   Tiempo time NOT NULL,
@@ -73,6 +72,7 @@ CREATE TABLE Tiene
 (
   idExamen INT NOT NULL,
   idPregunta INT NOT NULL,
+  TipoExamen varchar(10) NOT NULL,
   PRIMARY KEY (idExamen, idPregunta),
   FOREIGN KEY (idExamen) REFERENCES Examen(idExamen),
   FOREIGN KEY (idPregunta) REFERENCES Reactivo(idPregunta)
