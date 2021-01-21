@@ -284,7 +284,6 @@ begin
 	declare existe, id, tipo int;
     declare existea int;
     declare nom, pat, mat, corr nvarchar(50);
-    declare nom1, pat1, mat1, corr1 nvarchar(50);
     declare msj nvarchar(200);
     
     set existe = (select count(*) from Cliente where correo = usr and contrasena = contra);
@@ -296,10 +295,10 @@ begin
     else
 		set existea = (select count(*) from Admon where correo = usr and contrasena = contra);
 		if(existea = 1) then
-			select idAdmin, nombre, paterno, materno, correo into id, nom1, pat1, mat1, corr1 from Admon where correo = usr;
+			select idAdmin, nombre, paterno, materno, correo into id, nom, pat, mat, corr from Admon where correo = usr;
 			set msj = "ok";
             set tipo = 2; #admin
-			select msj, tipo, id, nom1, pat1, mat1, corr1;
+			select msj, tipo, id, nom, pat, mat, corr;
 		end if;
     end if;
     if(existea+existe=0)then
