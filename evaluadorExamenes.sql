@@ -338,3 +338,6 @@ begin
     select msj;
 end; |
 delimiter ;
+
+create view TotalReac as select count(idPregunta) as "Total de preguntas" from
+Reactivo;
