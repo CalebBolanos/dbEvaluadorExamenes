@@ -1,4 +1,4 @@
-SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY','')); -- Comando usado para poder modificar tablar
+SET sql_mode=(SELECT REPLACE(@@sql_mode,"ONLY_FULL_GROUP_BY","")); -- Comando usado para poder modificar tablar
 drop database if exists examenes;				   -- Comando para borrar una base de datos en caso de exist
 create database examenes;					   -- Comando para crear una base de datos
 
@@ -407,18 +407,19 @@ delimiter ;
 call AgreClien(1, 0, 1);
 
 /*Comando para crear una vista la cual mostrara que examen corresponde a cada cliente asi como su proceso del examen, fecha de
-creacion*/								     
+creacion*/		
+drop view if exists Progre;						     
 create view Progre as select e.idExamen as "IdExamen", c.idCliente as "IdCliente", 
-t.TipoExamen as "TituloExamen", co.Estado as "Progreso", e.Fecha as "Fecha"
-from Examen e, Tiene t, Completa co, Cliente c where 
+t.TipoExamen as "TituloExamen", co.Estado as "Progreso", e.Fecha as "Fecha",
+e.Tiempo as "Duracion" from Examen e, Tiene t, Completa co, Cliente c where 
 t.idExamen = e.idExamen and e.idExamen = co.idExamen and 
 co.idCliente = c.idCliente group by 2 order by 1;
 								     
 /*Comando usado para revisar la vista la cual muestra el examen y el progreso de cada examen */
-select * from Progre;
-
+select * from Progre where idCliente = 1;
+select * from cliente;
 /*Procedimiento (Procedure) para seleccionar los Reactivos de forma aleatoria y agregarlos a la tabla tiene*/
-insert into Examen values(1,"21/01/21","5:07");
+-- insert into Examen values(1,"21/01/21","5:07");
 drop procedure if exists RandRe;
 delimiter |
 create procedure RandRe(in idExa int, in Titulo nvarchar(10))
@@ -458,4 +459,56 @@ delimiter ;
 /*Comando para llamar al procedimiento random*/
 call RandRe(2,"ada");
 select * from Tiene;
+
+
+/*Procedimiento (Procedure) revisar la calificacion de un cliente y examen en especifico*/
+drop procedure if exists Cali;
+delimiter |
+create procedure Cali(in idClie int,in idExam int)
+begin
+	declare existe,ex int;
+    declare msj varchar(200);
+    set existe = (select count(*) from Cliente where idCliente = idClie);
+    if(existe = 1) then
+		if(ex = 1) then
+			select e.idExmanen as "idExmanen", c.idCliente as "idCliente",
+            co.Calificacion as "Calificacion" from Examen e, Cliente c, Completa co
+            where e.idExamen = co.idExamen and co.idCliente = c.idCliente and
+            co.idCliente = idClie and co.idExamen = idExam;
+		else
+			set msj = "Id de examen invalido";
+			select msj;
+        end if;
+    else
+		set msj = "Id de usuario invalido";
+		select msj;
+    end if;
+end; |
+delimiter ;
+call Cali(1, 1);
+
+/*Procedimiento (Procedure) revisar la duracion de examen de un cliente y examen en especifico*/
+drop procedure if exists MostDur;
+delimiter |
+create procedure MostDur(in idClie int,in idExam int)
+begin
+	declare existe,ex int;
+    declare msj varchar(200);
+    set existe = (select count(*) from Cliente where idCliente = idClie);
+    if(existe = 1) then
+		if(ex = 1) then
+			select IdExmanen,IdCliente,TituloExamen, Duracion from Progre
+            where IdExmanen=idExamn and IdCliente=idClie;
+		else
+			set msj = "Id de examen invalido";
+			select msj;
+        end if;
+    else
+		set msj = "Id de usuario invalido";
+		select msj;
+    end if;
+end; |
+delimiter ;
+
+call MostDur(1, 1);
 
