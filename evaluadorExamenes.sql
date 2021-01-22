@@ -512,3 +512,13 @@ delimiter ;
 
 call MostDur(1, 1);
 
+/*Procedimiento (Procedure) para agregar registros a la tabla Examen*/
+drop procedure if exists CreaExam;
+delimiter |
+create procedure CreaExam(in Fech date,in Tiem time)
+begin
+	declare idEx int;
+    set idEx  = (select ifnull(max(idExamen),0)+1 from Examen);
+    insert into Examen values(idEx, Fech, Tiem);
+end; |
+delimiter ;
