@@ -417,5 +417,45 @@ co.idCliente = c.idCliente group by 2 order by 1;
 /*Comando usado para revisar la vista la cual muestra el examen y el progreso de cada examen */
 select * from Progre;
 
+/*Procedimiento (Procedure) para seleccionar los Reactivos de forma aleatoria y agregarlos a la tabla tiene*/
+insert into Examen values(1,"21/01/21","5:07");
+drop procedure if exists RandRe;
+delimiter |
+create procedure RandRe(in idExa int, in Titulo nvarchar(10))
+begin
+	declare existe, va,va1,va2,va3,va4,va5,va6,va7,va8,va9 int;
+    declare msj varchar(200);
+    declare counter bigint default 0;
+    set existe = (select count(*) from Examen where idExamen = idExa);
+    if(existe = 1) then
+		set va = (select idPregunta from Reactivo order by RAND() Limit 1);
+        set va1 = (select idPregunta from Reactivo where idPregunta not in(va) order by RAND() Limit 1);
+        set va2 = (select idPregunta from Reactivo where idPregunta not in(va,va1) order by RAND() Limit 1);
+        set va3 = (select idPregunta from Reactivo where idPregunta not in(va,va1,va2) order by RAND() Limit 1);
+        set va4 = (select idPregunta from Reactivo where idPregunta not in(va,va1,va2,va3) order by RAND() Limit 1);
+        set va5 = (select idPregunta from Reactivo where idPregunta not in(va,va1,va2,va3,va4) order by RAND() Limit 1);
+        set va6 = (select idPregunta from Reactivo where idPregunta not in(va,va1,va2,va3,va4,va5) order by RAND() Limit 1);
+        set va7 = (select idPregunta from Reactivo where idPregunta not in(va,va1,va2,va3,va4,va5,va6) order by RAND() Limit 1);
+        set va8 = (select idPregunta from Reactivo where idPregunta not in(va,va1,va2,va3,va4,va5,va6,va7) order by RAND() Limit 1);
+        set va9 = (select idPregunta from Reactivo where idPregunta not in(va,va1,va2,va3,va4,va5,va6,va7,va8) order by RAND() Limit 1);
+        insert into Tiene values(idExa,(select va),Titulo);
+        insert into Tiene values(idExa,(select va1),Titulo);
+        insert into Tiene values(idExa,(select va2),Titulo);
+        insert into Tiene values(idExa,(select va3),Titulo);
+        insert into Tiene values(idExa,(select va4),Titulo);
+        insert into Tiene values(idExa,(select va5),Titulo);
+        insert into Tiene values(idExa,(select va6),Titulo);
+        insert into Tiene values(idExa,(select va7),Titulo);
+        insert into Tiene values(idExa,(select va8),Titulo);
+        insert into Tiene values(idExa,(select va9),Titulo);
+    else
+	set msj = "Id de examen invalido";
+        select msj;
+    end if;
+end; |
+delimiter ;
 
+/*Comando para llamar al procedimiento random*/
+call RandRe(2,"ada");
+select * from Tiene;
 
