@@ -1,3 +1,4 @@
+SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
 drop database if exists examenes;
 create database examenes;
 
@@ -46,6 +47,7 @@ CREATE TABLE Crea
 CREATE TABLE Completa
 (
   Calificacion float NOT NULL,
+  Estado int not null,
   idCliente INT NOT NULL,
   idExamen INT NOT NULL,
   PRIMARY KEY (idCliente, idExamen),
@@ -271,8 +273,8 @@ begin
     end if;
 end; |
 delimiter ;
-call spRegistrarCliente("carl", "jhonson", "jr", "carl@hotmail.com", "1234","c");
-call spRegistrarCliente("carl", "jhonson", "jr", "carl@hotmail.com", "1234","a");
+call spRegistrarCliente("a", "a", "a", "a", "a","c");
+call spRegistrarCliente("b", "b", "b", "b", "b","a");
 select * from Cliente;
 select * from Admon;
 
@@ -321,6 +323,9 @@ r.OpC as "Opcion C", r.OpD as "Opcion D", r.Respuesta as "Respuesta correcta",
 e.Fecha as "Fecha de creacion" FROM Examen e, Tiene t, Reactivo r where 
 r.idPregunta = t.idPregunta and t.idExamen = e.idExamen order by 1;
 
+select * from MostraExa;
+
+
 drop procedure if exists RespCorre;
 delimiter |
 create procedure RespCorre(in idClie int, in NumPregu int)
@@ -345,3 +350,49 @@ delimiter ;
 
 create view TotalReac as select count(idPregunta) as "Total de preguntas" from
 Reactivo;
+
+insert into Examen values(1,"21/01/21","5:07");
+insert into Tiene values(1,1,"Jojo");
+insert into Tiene values(1,2,"Jojo");
+insert into Tiene values(1,3,"Jojo");
+insert into Tiene values(1,4,"Jojo");
+insert into Tiene values(1,5,"Jojo");
+insert into Tiene values(1,6,"Jojo");
+insert into Tiene values(1,7,"Jojo");
+insert into Tiene values(1,8,"Jojo");
+insert into Tiene values(1,9,"Jojo");
+insert into Tiene values(1,10,"Jojo");
+
+
+drop procedure if exists AgreClien;
+delimiter |
+create procedure AgreClien(in idClie int, in Esta int, in idExam int)
+begin
+	declare existe int;
+    declare msj varchar(200);
+    set existe = (select count(*) from Cliente where idCliente = idClie);
+    if(existe = 1) then
+		set existe = (select count(*) from Completa where idCliente = idClie);
+		if(existe = 1) then
+			UPDATE Completa set Estado = Esta where idCliente = idClie;
+			set msj = "Cambio exitoso";
+		else
+			insert into Completa values(0,0,idClie,idExam);
+			set msj = "Alumno insertado";
+		end if;
+    end if;
+    select msj;
+end; |
+delimiter ;
+call AgreClien(1, 0, 1);
+
+create view Progre as select e.idExamen as "IdExamen", c.idCliente as "IdCliente", 
+t.TipoExamen as "TituloExamen", co.Estado as "Progreso", e.Fecha as "Fecha"
+from Examen e, Tiene t, Completa co, Cliente c where 
+t.idExamen = e.idExamen and e.idExamen = co.idExamen and 
+co.idCliente = c.idCliente group by 2 order by 1;
+
+select * from Progre;
+
+
+
