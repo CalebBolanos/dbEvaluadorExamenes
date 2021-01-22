@@ -1,20 +1,20 @@
-SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
-drop database if exists examenes;
-create database examenes;
+SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY','')); -- Comando usado para poder modificar tablar
+drop database if exists examenes;				   -- Comando para borrar una base de datos en caso de exist
+create database examenes;					   -- Comando para crear una base de datos
 
-use examenes;
+use examenes;							   -- Comando para usar una base de datos
 
-/*=======================Tablas===================*/
-CREATE TABLE Examen
-(
+/*===============================================Tablas===========================================================================*/
+CREATE TABLE Examen						  -- Comando para crear una tabla llamanda Examen la cual almacenara
+(								  -- ID de examenes, la fecha de creacion y el tiempo de cada examen
   idExamen INT NOT NULL,
   Fecha date NOT NULL,
   Tiempo time NOT NULL,
   PRIMARY KEY (idExamen)
 );
 
-CREATE TABLE Cliente
-(
+CREATE TABLE Cliente						  -- Crea una tabla llamada Cliente la cual almacenara el id, nombre
+(								  -- apellidos, correo y contrasena de cada cliente
   idCliente INT NOT NULL,
   nombre varchar(30) NOT NULL,
   paterno varchar(30) NOT NULL,
@@ -24,8 +24,8 @@ CREATE TABLE Cliente
   PRIMARY KEY (idCliente)
 );
 
-CREATE TABLE Admon
-(
+CREATE TABLE Admon						 -- Crea una tabla llamada Admon para almacenar el id, nombre, apellidos
+(								 -- correo y contrasena de cada administrados
   idAdmin INT NOT NULL,
   nombre varchar(30) NOT NULL,
   paterno varchar(30) NOT NULL,
@@ -35,8 +35,8 @@ CREATE TABLE Admon
   PRIMARY KEY (idAdmin)
 );
 
-CREATE TABLE Crea
-(
+CREATE TABLE Crea						-- Crea una tabla llamada Crea la cual es resultado de la relacion
+(								-- muchos a muchos entre Admon y Examen por lo que almacena sus id
   idExamen INT NOT NULL,
   idAdmin INT NOT NULL,
   PRIMARY KEY (idExamen, idAdmin),
@@ -44,10 +44,10 @@ CREATE TABLE Crea
   FOREIGN KEY (idAdmin) REFERENCES Admon(idAdmin)
 );
 
-CREATE TABLE Completa
-(
-  Calificacion float NOT NULL,
-  Estado int not null,
+CREATE TABLE Completa						-- Crea una tabla llamada Completa la cual es resultado de la relacion
+(								-- muchos a muchos entre Cliente y Examen por lo que almacena sus id
+  Calificacion float NOT NULL,					-- asi como dos atributos los cuales uno sera para un Estado de 
+  Estado int not null,						-- progreso de cada cliente y su calificacion
   idCliente INT NOT NULL,
   idExamen INT NOT NULL,
   PRIMARY KEY (idCliente, idExamen),
@@ -55,9 +55,9 @@ CREATE TABLE Completa
   FOREIGN KEY (idExamen) REFERENCES Examen(idExamen)
 );
 
-CREATE TABLE Reactivo
-(
-  idPregunta INT NOT NULL,
+CREATE TABLE Reactivo						-- Crea una tabla llamada Reactivo para almacenar el id, la pregunta,
+(								-- las 4 opciones posibles, la repuesta correcta y el id de admin 
+  idPregunta INT NOT NULL,					-- resultado de una relacion 1 a muchos entre Admin y Reactivos
   pregunta varchar(600) not null,
   OpA varchar(600) NOT NULL,
   OpB varchar(600) NOT NULL,
@@ -69,9 +69,9 @@ CREATE TABLE Reactivo
   FOREIGN KEY (idAdmin) REFERENCES Admon(idAdmin)
 );
 
-CREATE TABLE Tiene
-(
-  idExamen INT NOT NULL,
+CREATE TABLE Tiene						-- Crea una tabla llamada Tiene la cual es resultado de la relacion
+(								-- muchos a muchos entre Examen y Reactivo asi como un atributo mas
+  idExamen INT NOT NULL,					-- para almacenar el nombre de cada examen
   idPregunta INT NOT NULL,
   TipoExamen nvarchar(10) NOT NULL,
   PRIMARY KEY (idExamen, idPregunta),
@@ -79,9 +79,9 @@ CREATE TABLE Tiene
   FOREIGN KEY (idPregunta) REFERENCES Reactivo(idPregunta)
 );
 
-CREATE TABLE Responde
-(
-  OpCliente varchar(500) not null,
+CREATE TABLE Responde						-- Crea una tabla llamada Responde la cual es resultado de la relacion
+(								-- muchos a muchos entre Cliente y Reactivo asi como un atributo mas
+  OpCliente varchar(500) not null,				-- para almacenar la respuesta que da el cliente a cada pregunta
   idPregunta INT NOT NULL,
   idCliente INT NOT NULL,
   PRIMARY KEY (idPregunta, idCliente),
@@ -89,16 +89,21 @@ CREATE TABLE Responde
   FOREIGN KEY (idCliente) REFERENCES Cliente(idCliente)
 );
 
-/*================== Insert ===========================*/
-insert into Admon values(1,'Edgar','Garcia','Marciano','edgargarcia@gmail.com','qwer1');
-insert into Admon values(2,'Jose Eduardo','Olay','Silis','laloolay@gmail.com','awsd2');
+/*============================================================= Insert ============================================================*/
+/*Comandos para insertar registros en la tabla Admon, de momento solo se insertaron 4 admins que son los integrantes
+del equipo*/
+
+insert into Admon values(1,'Edgar','Garcia','Marciano',		
+'edgargarcia@gmail.com','qwer1');
+insert into Admon values(2,'Jose Eduardo','Olay','Silis',
+'laloolay@gmail.com','awsd2');
 insert into Admon values(3,"Caleb Salomon","Bolaños","Ramos",
 "bolanos.c@hotmail.com","CalSa");
 insert into Admon values(4,"Axel","Hernandez","Oble",
 "axel.2001@yahoo.com.mx","AxHO");
 
-
-
+/*Comandos para insertar registros en la tabla Reactivos, de momento solo se insertaron 50 reactivos que son los requeridos 
+inicialmente*/
 
 insert into Reactivo values(1,'En la Cadena Alimenticia, a cada eslabón se le conoce con el nombre de:','Descomposición','Fuente potencial de alimento','Flujo de energía','Nivel trófico','Nivel trófico',1);
 insert into Reactivo values(2,'En los seres humanos, la unión de un gameto femenino (óvulo) con un gameto masculino (espermatozoide) da como resultado un cigoto con _____ cromosomas:','46','18','14','36','46',2);
@@ -236,7 +241,20 @@ insert into Reactivo values(50,"En el Hemisferio Norte el 21 de marzo inicia
 la primavera y en el Hemisferio Sur inicia:", "Primavera", "Invierno", 
 "Otoño","Verano", "Otoño","4");
 
-/*Registro de clientes*/
+/*Comando para insertar registros en la tabla Examen y en la tabla Tiene*/			     
+insert into Examen values(1,"21/01/21","5:07");
+insert into Tiene values(1,1,"Jojo");
+insert into Tiene values(1,2,"Jojo");
+insert into Tiene values(1,3,"Jojo");
+insert into Tiene values(1,4,"Jojo");
+insert into Tiene values(1,5,"Jojo");
+insert into Tiene values(1,6,"Jojo");
+insert into Tiene values(1,7,"Jojo");
+insert into Tiene values(1,8,"Jojo");
+insert into Tiene values(1,9,"Jojo");
+insert into Tiene values(1,10,"Jojo");			     
+			     
+/*Procedimiento (Procedure) para el registro de clientes*/
 drop procedure if exists spRegistrarCliente;
 delimiter |
 create procedure spRegistrarCliente(in nom varchar(50), in pat varchar(50), in mat varchar(50), in corr varchar(50), contra nvarchar(50),identificador varchar(1))-- si identificador = *c* es cliente, si identificador = *a* admin
@@ -273,12 +291,16 @@ begin
     end if;
 end; |
 delimiter ;
+
+/*Comando para llamar al procedimiento y agregar a dos usuarios*/
 call spRegistrarCliente("a", "a", "a", "a", "a","c");
 call spRegistrarCliente("b", "b", "b", "b", "b","a");
-select * from Cliente;
+
+/*Comando usado para revisar las tablas cliente y admon*/
+select * from Cliente;							
 select * from Admon;
 
-/*INICIO DE SESION*/
+/*Procedimiento (Procedure) para el INICIO DE SESION*/
 drop procedure if exists spIniciarSesion;
 delimiter |
 create procedure spIniciarSesion(in usr varchar(50), contra nvarchar(50))
@@ -309,23 +331,29 @@ begin
       end if;
 end; |
 delimiter ;
+
+/*Comando para llamar al procedimiento y comprobar el inicio de sesion de 3 usuarios*/								     
 call spIniciarSesion("carl@hotmail.com", "1234");
 call spIniciarSesion("a", "aasa");
 call spIniciarSesion("edgargarcia@gmail.com", "qwer1");
 
+/*Comando usado para revisar las tablas cliente y admon*/
 select * from Cliente;
 select * from Admon;
-
+								     
+/*Comando usado para revisar la creacion de una vista la cual muestra todos los examenes con sus respectivas preguntas,
+sus opciones, su respuesta correcta, el nombre del examen, asi como la fecha de creacion*/
 create view MostraExa as select e.idExamen as "Id Examen", 
 t.TipoExamen as "Tipo de examen", r.idPregunta as "Id Pregunta",
 r.pregunta as "Pregunta", r.OpA as "Opcion A", r.OpB as "Opcion B", 
 r.OpC as "Opcion C", r.OpD as "Opcion D", r.Respuesta as "Respuesta correcta", 
 e.Fecha as "Fecha de creacion" FROM Examen e, Tiene t, Reactivo r where 
 r.idPregunta = t.idPregunta and t.idExamen = e.idExamen order by 1;
-
+								     
+/*Comando para probar la view que muestra los examenes*/
 select * from MostraExa;
 
-
+/*Procedimiento (Procedure) para verificar si la respuesta dada por el cliente es correcta o incorrecta*/
 drop procedure if exists RespCorre;
 delimiter |
 create procedure RespCorre(in idClie int, in NumPregu int)
@@ -347,23 +375,13 @@ begin
     select msj;
 end; |
 delimiter ;
-
+								     
+/*Comando usado para crear una vista la cual nos mostrara el numero total de reactivos con la que cuenta la base de datos*/
 create view TotalReac as select count(idPregunta) as "Total de preguntas" from
 Reactivo;
 
-insert into Examen values(1,"21/01/21","5:07");
-insert into Tiene values(1,1,"Jojo");
-insert into Tiene values(1,2,"Jojo");
-insert into Tiene values(1,3,"Jojo");
-insert into Tiene values(1,4,"Jojo");
-insert into Tiene values(1,5,"Jojo");
-insert into Tiene values(1,6,"Jojo");
-insert into Tiene values(1,7,"Jojo");
-insert into Tiene values(1,8,"Jojo");
-insert into Tiene values(1,9,"Jojo");
-insert into Tiene values(1,10,"Jojo");
-
-
+/*Procedimiento (Procedure) para agregar un cliente a la tabla Completa, en caso de que ya este este usuario, se modifica
+ese registro*/
 drop procedure if exists AgreClien;
 delimiter |
 create procedure AgreClien(in idClie int, in Esta int, in idExam int)
@@ -384,14 +402,19 @@ begin
     select msj;
 end; |
 delimiter ;
+								     
+/*Comando para revisrar el procedimiento para agregar clientes*/								     
 call AgreClien(1, 0, 1);
 
+/*Comando para crear una vista la cual mostrara que examen corresponde a cada cliente asi como su proceso del examen, fecha de
+creacion*/								     
 create view Progre as select e.idExamen as "IdExamen", c.idCliente as "IdCliente", 
 t.TipoExamen as "TituloExamen", co.Estado as "Progreso", e.Fecha as "Fecha"
 from Examen e, Tiene t, Completa co, Cliente c where 
 t.idExamen = e.idExamen and e.idExamen = co.idExamen and 
 co.idCliente = c.idCliente group by 2 order by 1;
-
+								     
+/*Comando usado para revisar la vista la cual muestra el examen y el progreso de cada examen */
 select * from Progre;
 
 
