@@ -450,6 +450,8 @@ begin
         insert into Tiene values(idExa,(select va7),Titulo);
         insert into Tiene values(idExa,(select va8),Titulo);
         insert into Tiene values(idExa,(select va9),Titulo);
+        set msj = "ok";
+        select msj;
     else
 	set msj = "Id de examen invalido";
         select msj;
