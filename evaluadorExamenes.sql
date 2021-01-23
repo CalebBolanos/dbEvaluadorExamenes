@@ -242,7 +242,7 @@ la primavera y en el Hemisferio Sur inicia:", "Primavera", "Invierno",
 "Otoño","Verano", "Otoño","4");
 
 /*Comando para insertar registros en la tabla Examen y en la tabla Tiene*/			     
-insert into Examen values(1,"21/01/21","5:07");
+insert into Examen values(1,"21/01/21","00:05:07");
 insert into Tiene values(1,1,"Jojo");
 insert into Tiene values(1,2,"Jojo");
 insert into Tiene values(1,3,"Jojo");
@@ -343,11 +343,12 @@ select * from Admon;
 								     
 /*Comando usado para revisar la creacion de una vista la cual muestra todos los examenes con sus respectivas preguntas,
 sus opciones, su respuesta correcta, el nombre del examen, asi como la fecha de creacion*/
-create view MostraExa as select e.idExamen as "Id Examen", 
-t.TipoExamen as "Tipo de examen", r.idPregunta as "Id Pregunta",
-r.pregunta as "Pregunta", r.OpA as "Opcion A", r.OpB as "Opcion B", 
-r.OpC as "Opcion C", r.OpD as "Opcion D", r.Respuesta as "Respuesta correcta", 
-e.Fecha as "Fecha de creacion" FROM Examen e, Tiene t, Reactivo r where 
+drop view if exists MostraExa;
+create view MostraExa as select e.idExamen as "idExamen", 
+t.TipoExamen as "tipoExamen", r.idPregunta as "idPregunta",
+r.pregunta as "pregunta", r.OpA as "opcionA", r.OpB as "opcionB", 
+r.OpC as "opcionC", r.OpD as "opcionD", r.Respuesta as "respuestaCorrecta", 
+e.Fecha as "creacion" FROM Examen e, Tiene t, Reactivo r where 
 r.idPregunta = t.idPregunta and t.idExamen = e.idExamen order by 1;
 								     
 /*Comando para probar la view que muestra los examenes*/
@@ -408,10 +409,10 @@ call AgreClien(1, 0, 1);
 
 /*Comando para crear una vista la cual mostrara que examen corresponde a cada cliente asi como su proceso del examen, fecha de
 creacion*/		
-drop view if exists Progre;						     
+drop view if exists Progre;                
 create view Progre as select e.idExamen as "IdExamen", c.idCliente as "IdCliente", 
 t.TipoExamen as "TituloExamen", co.Estado as "Progreso", e.Fecha as "Fecha",
-e.Tiempo as "Duracion" from Examen e, Tiene t, Completa co, Cliente c where 
+e.Tiempo as "Duracion", co.Calificacion as "Calificacion" from Examen e, Tiene t, Completa co, Cliente c where 
 t.idExamen = e.idExamen and e.idExamen = co.idExamen and 
 co.idCliente = c.idCliente group by 2 order by 1;
 								     
@@ -534,3 +535,66 @@ begin
     select idExamen from Examen where idExamen = idEx;
 end; |
 delimiter ;
+
+/*Procedimiento (Procedure) para agregar registros a la tabla Responde*/
+drop procedure if exists Respues;
+delimiter |
+create procedure Respues(in idCli int,in idReac int, in resp varchar(600))
+begin
+  declare existe, exi int;
+    declare msj varchar(200);
+    set existe = (select count(*) from Cliente where idCliente = idCli);
+    if(existe = 1) then
+    set exi = (select count(*) from Responde where idCliente = idCli and idPregunta=idReac);
+    if(exi = 0) then
+      insert into Responde values(resp,idReac,idCli);
+            set msj="ok";
+            select msj;
+        else
+      set msj="Usuario con esta pregunta ya registrado";
+            select msj;
+        end if;
+    else
+    set msj="Id invalido";
+        select msj;
+    end if;
+end; |
+delimiter ;
+
+-- call Respues(1,1,"Nepe");
+-- call AgreClien(1, 1, 1);-- idClient, estado, idExa
+
+/*Procedimiento (Procedure) para asignar una calificacion al cliente*/
+drop procedure if exists spPonerCalificacionExamen;
+delimiter |
+create procedure spPonerCalificacionExamen(in idExa int, in idCli int, in cal int)
+begin
+  declare acabado int;
+    declare msj nvarchar(200);
+    set acabado = (select Progreso from progre where idCliente = idCli and idExamen = idExa);
+    if(acabado = 10) then
+    update Completa set Calificacion = cal where idCliente = idCli and idExamen = idExa;
+        set msj = "ok";
+    else
+    set msj = "Aun no ha acabado el examen";
+    end if;
+    select msj;
+end; |
+delimiter ;
+call spPonerCalificacionExamen(1, 1, 2);-- idExamen, idCliente, cal
+
+/*Vista (View ) para mostrar las respuestas del cliente a lado de sus reactivos correspondientes*/
+drop view if exists vwmostrarResultadosCompletos;
+create view vwmostrarResultadosCompletos as select e.idExamen as "idExamen", 
+t.TipoExamen as "tipoExamen", r.idPregunta as "idPregunta",
+r.pregunta as "pregunta", r.OpA as "opcionA", r.OpB as "opcionB", 
+r.OpC as "opcionC", r.OpD as "opcionD", r.Respuesta as "respuestaCorrecta", re.OpCliente as "respuestaCliente", re.idCliente as "idCliente",
+e.Fecha as "creacion" FROM Examen e, Tiene t, Reactivo r, Responde re where 
+r.idPregunta = t.idPregunta and t.idExamen = e.idExamen and r.idPregunta = re.idPregunta order by 1;
+
+select respuestaCorrecta, respuestaCliente from vwmostrarResultadosCompletos where idCliente = 1 and idExamen = 1;
+select * from mostraexa;
+
+select tiempo from examen where idExamen = 1;
+
+select * from progre;
