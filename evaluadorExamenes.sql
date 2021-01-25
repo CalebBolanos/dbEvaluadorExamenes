@@ -600,3 +600,29 @@ select * from mostraexa;
 select tiempo from examen where idExamen = 1;
 
 select * from progre;
+
+								     
+/*Procedimiento (Procedure) para agregar asignarle un examen a todos los clietes*/
+drop procedure if exists ExaClie;
+delimiter |
+create procedure ExaClie(in idExam int)
+begin
+	declare existe int;
+    declare msj varchar(200);
+    declare counter BIGINT default 0;
+    
+    my_loop: loop
+    set counter=counter+1;
+    
+    if counter = (select count(idCliente) from Cliente) then
+		Leave my_loop;
+	else
+		set existe = (select count(*) from Completa where counter = idCliente);
+		if (existe = 0) then
+			insert into Completa Values(0,0,counter,idExam);
+		end if;
+    end if;
+    
+    end loop my_loop;
+end; |
+delimiter ;
