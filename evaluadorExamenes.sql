@@ -626,3 +626,17 @@ begin
     end loop my_loop;
 end; |
 delimiter ;
+
+/*Sp para la creacion de nuevos reactivos*/
+drop procedure if exists CreaReac;
+delimiter |
+create procedure CreaReac(in pre varchar(600),in A varchar(600),in B varchar(600),in C varchar(600),in D varchar(600),in R varchar(600))
+begin
+	declare idPr int;
+    declare msj varchar(200);
+    set idPr  = (select ifnull(max(idPregunta),0)+1 from REactivo);
+    insert into Reactivo values(idPr, pre, A,B,C,D,R,1);
+    set msj = "Agregado";
+    select msj;
+end; |
+delimiter ;
