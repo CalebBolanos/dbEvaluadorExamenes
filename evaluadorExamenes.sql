@@ -20,7 +20,7 @@ CREATE TABLE Cliente						  -- Crea una tabla llamada Cliente la cual almacenara
   paterno varchar(30) NOT NULL,
   materno varchar(30) NOT NULL,
   correo varchar(20) NOT NULL,
-  contrasena varchar(10) NOT NULL,
+  contrasena varchar(100) NOT NULL,
   PRIMARY KEY (idCliente)
 );
 
@@ -31,7 +31,7 @@ CREATE TABLE Admon						 -- Crea una tabla llamada Admon para almacenar el id, n
   paterno varchar(30) NOT NULL,
   materno varchar(30) NOT NULL,
   correo varchar(30) NOT NULL,
-  contrasena varchar(10) NOT NULL,
+  contrasena varchar(100) NOT NULL,
   PRIMARY KEY (idAdmin)
 );
 
@@ -241,7 +241,7 @@ insert into Reactivo values(50,"En el Hemisferio Norte el 21 de marzo inicia
 la primavera y en el Hemisferio Sur inicia:", "Primavera", "Invierno", 
 "Otoño","Verano", "Otoño","4");
 
-/*Comando para insertar registros en la tabla Examen y en la tabla Tiene*/			     
+/*Comando para insertar registros en la tabla Examen y en la tabla Tiene			     
 insert into Examen values(1,"21/01/21","00:05:07");
 insert into Tiene values(1,1,"Jojo");
 insert into Tiene values(1,2,"Jojo");
@@ -253,7 +253,7 @@ insert into Tiene values(1,7,"Jojo");
 insert into Tiene values(1,8,"Jojo");
 insert into Tiene values(1,9,"Jojo");
 insert into Tiene values(1,10,"Jojo");			     
-			     
+*/			     
 /*Procedimiento (Procedure) para el registro de clientes*/
 drop procedure if exists spRegistrarCliente;
 delimiter |
@@ -293,8 +293,8 @@ end; |
 delimiter ;
 
 /*Comando para llamar al procedimiento y agregar a dos usuarios*/
-call spRegistrarCliente("a", "a", "a", "a", "a","c");
-call spRegistrarCliente("b", "b", "b", "b", "b","a");
+-- call spRegistrarCliente("a", "a", "a", "a", "a","c");
+-- call spRegistrarCliente("b", "b", "b", "b", "b","a");
 
 /*Comando usado para revisar las tablas cliente y admon*/
 select * from Cliente;							
@@ -640,3 +640,9 @@ begin
     select msj;
 end; |
 delimiter ;
+
+
+
+
+
+
